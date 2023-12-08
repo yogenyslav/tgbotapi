@@ -31,13 +31,12 @@ func (r *Router) HandleMessage(text string, handlerFunc HandlerFunc) {
 	})
 }
 
-// Not implemented
-// func (r *Router) HandleCallback(text string, f HandlerFunc) {
-// 	r.handlers = append(r.handlers, Handler{
-// 		filter: Filter{
-// 			Type:  MessageUpdateType,
-// 			Value: text,
-// 		},
-// 		executable: f,
-// 	})
-// }
+func (r *Router) HandleCallback(callbackData any, handlerFunc HandlerFunc) {
+	r.handlers = append(r.handlers, handler{
+		filter: Filter{
+			Type:  MessageUpdateType,
+			Value: callbackData,
+		},
+		executable: handlerFunc,
+	})
+}

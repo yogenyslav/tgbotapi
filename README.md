@@ -20,19 +20,31 @@ import (
 func main() {
 	debugMode := true
 
-	b := tgbotapi.NewBotAPI("token", debugMode)
+	b := tgbotapi.NewBotAPI("6336336608:AAEohz8Ut4S8kSjiO_In2LmdN52ImmQDHcA", debugMode)
 	dp := tgbotapi.NewDispatcher(b)
 
 	router := tgbotapi.NewRouter("main")
+
+	oneTime := true
+	markup := tgbotapi.NewReplyMarkup(oneTime)
+	markup.ReplyKeyboard.AddRow(tgbotapi.NewReplyKeyboardButton("Button 1"), tgbotapi.NewReplyKeyboardButton("Button 2"))
+
 	router.HandleCommand("start", func(c *tgbotapi.Ctx) error {
-		err := c.AnswerMessage(fmt.Sprintf("Hello, %s!", c.Message().From.FirstName))
+		err := c.AnswerMessage(fmt.Sprintf("Hello, %s!", c.Message().From.FirstName), nil /* replyMarkup */)
 		if err != nil {
 			panic(err)
 		}
-		return c.AnswerMessage("This bot is written in Golang!")
+		return c.AnswerMessage("This bot is written in Golang!", markup)
+	})
+
+	// filter value "" matches every message
+	router.HandleMessage("", func(c *tgbotapi.Ctx) error {
+		return c.AnswerMessage(c.Message().Text, nil)
 	})
 
 	dp.AddRouter(router)
 	dp.StartPolling(60)
+}
+
 }
 ```

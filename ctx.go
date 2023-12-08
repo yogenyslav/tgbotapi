@@ -31,10 +31,18 @@ func NewCtx(ctx context.Context, bot *Bot, ok bool, err error) *Ctx {
 	}
 }
 
-func (c *Ctx) AnswerMessage(text string) error {
+func (c *Ctx) AnswerMessage(text string, replyMarkup *KeyboardSettings) error {
 	options := SendMessageOptions{
 		ChatId: int64(c.Message().From.Id),
 		Text:   text,
+	}
+
+	if replyMarkup != nil {
+		if replyMarkup.ReplyKeyboard != nil {
+			options.ReplyMarkup = replyMarkup.ReplyKeyboard
+		} else if replyMarkup.InlineKeyboard != nil {
+			options.ReplyMarkup = replyMarkup.InlineKeyboard
+		}
 	}
 
 	return c.AnswerMessageWithOptions(options)

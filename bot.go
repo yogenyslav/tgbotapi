@@ -71,6 +71,9 @@ func (b *Bot) callApi(requestType, method string, requestBody any) (*ApiResult, 
 		if err != nil {
 			return nil, fmt.Errorf("failed to marshal request body: %+v", err)
 		}
+		if b.debugMode {
+			log.Printf("DEBUG: method: %s, request: %s", method, string(rawRequestBody))
+		}
 		response, err = http.Post(fmt.Sprintf("%s/%s", b.apiUrl, method), "application/json", bytes.NewReader(rawRequestBody))
 	} else {
 		return nil, fmt.Errorf("invalid request type: %s", requestType)
