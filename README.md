@@ -45,6 +45,4 @@ func main() {
 	dp.AddRouter(router)
 	dp.StartPolling(60)
 }
-
-}
 ```
