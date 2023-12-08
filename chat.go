@@ -8,3 +8,6 @@ type ChatMemberUpdated struct {
 
 type ChatJoinRequest struct {
 }
+
+type ChatShared struct {
+}
