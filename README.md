@@ -20,7 +20,7 @@ import (
 func main() {
 	debugMode := true
 
-	b := tgbotapi.NewBotAPI("6336336608:AAEohz8Ut4S8kSjiO_In2LmdN52ImmQDHcA", debugMode)
+	b := tgbotapi.NewBotAPI("token", debugMode)
 	dp := tgbotapi.NewDispatcher(b)
 
 	router := tgbotapi.NewRouter("main")
