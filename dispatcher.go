@@ -59,7 +59,7 @@ func (d *Dispatcher) StartPolling(timeout int) {
 		for {
 			apiResult, err := d.b.getUpdates(offset, limit, retryTimeout)
 			if err != nil {
-				d.b.updates <- NewCtx(ctx, d.b, apiResult.Ok, GetUpdatesFailed{err.Error(), retryTimeout})
+				d.b.updates <- NewCtx(ctx, d.b, false, GetUpdatesFailed{err.Error(), retryTimeout})
 				time.Sleep(retryTimeout)
 				continue
 			}

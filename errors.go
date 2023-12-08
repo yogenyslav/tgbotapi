@@ -21,8 +21,8 @@ type (
 	}
 
 	InvalidType struct {
-		Got      string
-		Expected string
+		Got      any
+		Expected any
 	}
 )
 
