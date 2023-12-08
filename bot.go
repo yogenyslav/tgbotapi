@@ -27,6 +27,7 @@ func NewBotAPI(token string, debugMode bool) *Bot {
 }
 
 func (b *Bot) getUpdates(offset int64, limit int, timeout time.Duration) (*ApiResultUpdate, error) {
+
 	response, err := http.Get(fmt.Sprintf("%s/getUpdates?offset=%d&timeout=%d&limit=1", b.apiUrl, offset, timeout))
 	if err != nil {
 		return nil, err

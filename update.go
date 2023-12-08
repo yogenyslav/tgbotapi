@@ -1,13 +1,13 @@
 package tgbotapi
 
+type UpdateType int
+
 const (
 	_ UpdateType = iota
 	CommandUpdateType
 	MessageUpdateType
 	CallbackUpdateType
 )
-
-type UpdateType int
 
 type Update struct {
 	Type UpdateType `json:"-"` // custom field
