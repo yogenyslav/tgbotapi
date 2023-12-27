@@ -4,7 +4,7 @@ const (
 	_ UpdateType = iota
 	CommandUpdateType
 	MessageUpdateType
-	CallbackUpdateType
+	CallbackQueryUpdateType
 )
 
 type UpdateType int

@@ -31,18 +31,23 @@ func NewCtx(ctx context.Context, bot *Bot, ok bool, err error) *Ctx {
 	}
 }
 
-func (c *Ctx) AnswerMessage(text string, replyMarkup *KeyboardSettings) error {
-	options := SendMessageOptions{
-		ChatId: int64(c.Message().From.Id),
-		Text:   text,
+func (c *Ctx) setUpdateType(t UpdateType) {
+	c.Update().Type = t
+}
+
+func (c *Ctx) AnswerMessage(text string, replyMarkup KeyboardMarkup) error {
+	var chatId int64
+
+	if c.Message() != nil {
+		chatId = c.Message().From.Id
+	} else if c.CallbackQuery() != nil {
+		chatId = c.CallbackQuery().From.Id
 	}
 
-	if replyMarkup != nil {
-		if replyMarkup.ReplyKeyboard != nil {
-			options.ReplyMarkup = replyMarkup.ReplyKeyboard
-		} else if replyMarkup.InlineKeyboard != nil {
-			options.ReplyMarkup = replyMarkup.InlineKeyboard
-		}
+	options := SendMessageOptions{
+		ChatId:      chatId,
+		Text:        text,
+		ReplyMarkup: replyMarkup,
 	}
 
 	return c.AnswerMessageWithOptions(options)
@@ -104,4 +109,8 @@ func (c *Ctx) Update() *Update {
 
 func (c *Ctx) Message() *Message {
 	return c.Update().Message
+}
+
+func (c *Ctx) CallbackQuery() *CallbackQuery {
+	return c.Update().CallbackQuery
 }

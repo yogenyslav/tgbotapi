@@ -1,12 +1,27 @@
 package tgbotapi
 
-type KeyboardSettings struct {
-	InlineKeyboard *InlineKeyboardMarkup `json:"inline_keyboard,omitempty"`
-	ReplyKeyboard  *ReplyKeyboardMarkup  `json:"reply_keyboard,omitempty"`
+type KeyboardMarkup interface {
+	Buttons() [][]string
 }
 
 type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]*InlineKeyboardButton `json:"inline_keyboard"`
+}
+
+func (kb *InlineKeyboardMarkup) Buttons() [][]string {
+	inlineKeyboard := make([][]string, 0, len(kb.InlineKeyboard))
+	for _, row := range kb.InlineKeyboard {
+		buff := make([]string, 0, len(row))
+		for _, button := range row {
+			buff = append(buff, button.Text)
+		}
+		inlineKeyboard = append(inlineKeyboard, buff)
+	}
+	return inlineKeyboard
+}
+
+func (kb *InlineKeyboardMarkup) AddRow(buttons ...*InlineKeyboardButton) {
+	kb.InlineKeyboard = append(kb.InlineKeyboard, buttons)
 }
 
 type InlineKeyboardButton struct {
@@ -23,14 +38,30 @@ type InlineKeyboardButton struct {
 }
 
 type ReplyKeyboardMarkup struct {
-	Keyboard     [][]*KeyboardButton `json:"keyboard"`
-	IsPersistent bool                `json:"is_persistent,omitempty"`
-	Resize       bool                `json:"resize_keyboard,omitempty"`
-	OneTime      bool                `json:"one_time_keyboard,omitempty"`
-	Placeholder  string              `json:"input_field_placeholder,omitempty"`
+	ReplyKeyboard [][]*ReplyKeyboardButton `json:"keyboard"`
+	IsPersistent  bool                     `json:"is_persistent,omitempty"`
+	Resize        bool                     `json:"resize_keyboard,omitempty"`
+	OneTime       bool                     `json:"one_time_keyboard,omitempty"`
+	Placeholder   string                   `json:"input_field_placeholder,omitempty"`
 }
 
-type KeyboardButton struct {
+func (kb *ReplyKeyboardMarkup) Buttons() [][]string {
+	replyKeyboard := make([][]string, 0, len(kb.ReplyKeyboard))
+	for _, row := range kb.ReplyKeyboard {
+		buff := make([]string, 0, len(row))
+		for _, button := range row {
+			buff = append(buff, button.Text)
+		}
+		replyKeyboard = append(replyKeyboard, buff)
+	}
+	return replyKeyboard
+}
+
+func (kb *ReplyKeyboardMarkup) AddRow(buttons ...*ReplyKeyboardButton) {
+	kb.ReplyKeyboard = append(kb.ReplyKeyboard, buttons)
+}
+
+type ReplyKeyboardButton struct {
 	Text            string                     `json:"text"`
 	RequestUser     *KeyboardButtonRequestUser `json:"request_user,omitempty"`
 	RequestChat     *KeyboardButtonRequestChat `json:"request_chat,omitempty"`
@@ -55,25 +86,36 @@ type LoginUrl struct {
 type CallbackGame struct {
 }
 
-func NewReplyMarkup(oneTime bool) *KeyboardSettings {
-	return NewReplyMarkupFromButtons(nil, oneTime)
+func NewReplyKeyboardMarkup(oneTime bool) *ReplyKeyboardMarkup {
+	return NewReplyKeyboardMarkupFromButtons(nil, oneTime)
 }
 
-func NewReplyMarkupFromButtons(buttons [][]*KeyboardButton, oneTime bool) *KeyboardSettings {
-	return &KeyboardSettings{
-		ReplyKeyboard: &ReplyKeyboardMarkup{
-			Keyboard: buttons,
-			OneTime:  oneTime,
-		},
+func NewReplyKeyboardMarkupFromButtons(buttons [][]*ReplyKeyboardButton, oneTime bool) *ReplyKeyboardMarkup {
+	return &ReplyKeyboardMarkup{
+		ReplyKeyboard: buttons,
+		OneTime:       oneTime,
 	}
 }
 
-func NewReplyKeyboardButton(text string) *KeyboardButton {
-	return &KeyboardButton{
+func NewReplyKeyboardButton(text string) *ReplyKeyboardButton {
+	return &ReplyKeyboardButton{
 		Text: text,
 	}
 }
 
-func (rk *ReplyKeyboardMarkup) AddRow(buttons ...*KeyboardButton) {
-	rk.Keyboard = append(rk.Keyboard, buttons)
+func NewInlineKeyboardMarkup() *InlineKeyboardMarkup {
+	return NewInlineKeyboardMarkupFromButtons(nil)
+}
+
+func NewInlineKeyboardMarkupFromButtons(buttons [][]*InlineKeyboardButton) *InlineKeyboardMarkup {
+	return &InlineKeyboardMarkup{
+		InlineKeyboard: buttons,
+	}
+}
+
+func NewInlineKeyboardButton(text, callbackData string) *InlineKeyboardButton {
+	return &InlineKeyboardButton{
+		Text:         text,
+		CallbackData: callbackData,
+	}
 }

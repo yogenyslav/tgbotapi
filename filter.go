@@ -2,26 +2,20 @@ package tgbotapi
 
 import (
 	"fmt"
-	"reflect"
 )
 
-type Filter struct {
+type filter struct {
 	Type  UpdateType
-	Value interface{}
+	Value string
 }
 
-func NewFilter(t UpdateType, v interface{}) Filter {
+func NewFilter(t UpdateType, v string) filter {
 	switch t {
 	case CommandUpdateType:
-		v, ok := v.(string)
-		if !ok {
-			panic(InvalidType{reflect.TypeOf(v).Name(), reflect.TypeOf("").Name()})
-		}
-
 		v = fmt.Sprintf("/%s", v)
 	}
 
-	return Filter{
+	return filter{
 		Type:  t,
 		Value: v,
 	}

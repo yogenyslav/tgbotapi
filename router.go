@@ -13,7 +13,7 @@ func NewRouter(name string) *Router {
 
 func (r *Router) HandleCommand(command string, handlerFunc HandlerFunc) {
 	r.handlers = append(r.handlers, handler{
-		filter: Filter{
+		filter: filter{
 			Type:  CommandUpdateType,
 			Value: command,
 		},
@@ -23,7 +23,7 @@ func (r *Router) HandleCommand(command string, handlerFunc HandlerFunc) {
 
 func (r *Router) HandleMessage(text string, handlerFunc HandlerFunc) {
 	r.handlers = append(r.handlers, handler{
-		filter: Filter{
+		filter: filter{
 			Type:  MessageUpdateType,
 			Value: text,
 		},
@@ -31,12 +31,19 @@ func (r *Router) HandleMessage(text string, handlerFunc HandlerFunc) {
 	})
 }
 
-func (r *Router) HandleCallback(callbackData any, handlerFunc HandlerFunc) {
+func (r *Router) HandleCallback(callbackData string, handlerFunc HandlerFunc) {
 	r.handlers = append(r.handlers, handler{
-		filter: Filter{
-			Type:  MessageUpdateType,
+		filter: filter{
+			Type:  CallbackQueryUpdateType,
 			Value: callbackData,
 		},
+		executable: handlerFunc,
+	})
+}
+
+func (r *Router) HandleCustomEvent(f filter, handlerFunc HandlerFunc) {
+	r.handlers = append(r.handlers, handler{
+		filter:     f,
 		executable: handlerFunc,
 	})
 }

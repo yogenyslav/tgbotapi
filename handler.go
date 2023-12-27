@@ -1,7 +1,7 @@
 package tgbotapi
 
 type handler struct {
-	filter     Filter
+	filter     filter
 	executable HandlerFunc
 }
 
@@ -20,7 +20,7 @@ func (h *handler) processUpdate(c *Ctx) error {
 			} else {
 				matched = c.Message().Text == h.filter.Value
 			}
-		case CallbackUpdateType:
+		case CallbackQueryUpdateType:
 			matched = c.Update().CallbackQuery.Data == h.filter.Value
 		}
 		if matched {

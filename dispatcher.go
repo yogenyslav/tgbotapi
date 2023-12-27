@@ -18,14 +18,16 @@ func NewDispatcher(b *Bot) *Dispatcher {
 	}
 }
 
-// now supports only text messages
 func (d *Dispatcher) handleUpdate(c *Ctx) {
 	if c.Message() != nil {
 		if c.Message().IsCommand() {
-			c.Update().Type = CommandUpdateType
+			c.setUpdateType(CommandUpdateType)
 		} else {
-			c.Update().Type = MessageUpdateType
+			c.setUpdateType(MessageUpdateType)
 		}
+	}
+	if c.CallbackQuery() != nil {
+		c.setUpdateType(CallbackQueryUpdateType)
 	}
 
 	for _, r := range d.routers {
@@ -48,7 +50,11 @@ func (d *Dispatcher) AddRouter(r *Router) {
 	d.routers = append(d.routers, r)
 }
 
-// timeout in seconds
+// Starts the pooling loop, blocks goroutine execution.
+//
+// # Params
+//
+// timeout - in seconds
 func (d *Dispatcher) StartPolling(timeout int) {
 	retryTimeout := 3 * time.Second
 	limit := 1

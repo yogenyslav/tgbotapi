@@ -32,7 +32,7 @@ type SendMessageOptions struct {
 	ProtectContent  bool             `json:"protect_content,omitempty"`
 	ReplyToMessage  int              `json:"reply_to_message_id,omitempty"`
 	AllowSending    bool             `json:"allow_sending_without_reply,omitempty"`
-	ReplyMarkup     any              `json:"reply_markup,omitempty"`
+	ReplyMarkup     KeyboardMarkup   `json:"reply_markup,omitempty"`
 }
 
 type MessageEntity struct {
