@@ -80,7 +80,7 @@ func main() {
 
 - ### Callback Queries
 
-  - [ ] Handle queries with specific data
+  - [X] Handle queries with specific data
 
 - ### States
 
